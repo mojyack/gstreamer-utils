@@ -11,7 +11,6 @@ auto add_new_element_to_pipeine(GstElement* const pipeline, const char* const el
     auto elm = gst_element_factory_make(element_name, NULL);
     assert_p(elm != NULL);
     assert_p(gst_bin_add(GST_BIN(pipeline), elm) == TRUE);
-    assert_p(gst_element_sync_state_with_parent(elm) == TRUE);
     return elm;
 }
 

@@ -34,7 +34,7 @@ auto run_pipeline(GstElement* pipeline) -> bool {
                    str ? str : "none");
         g_clear_error(&err);
         g_free(str);
-    }
+    } break;
     case GST_MESSAGE_EOS:
         g_print("End-Of-Stream reached.\n");
         break;

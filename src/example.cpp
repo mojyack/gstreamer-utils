@@ -4,22 +4,24 @@
 #include "macros/autoptr.hpp"
 #include "macros/unwrap.hpp"
 #include "pipeline-helper.hpp"
-#include "util/assert.hpp"
 
 namespace {
 declare_autoptr(GMainLoop, GMainLoop, g_main_loop_unref);
 declare_autoptr(GstMessage, GstMessage, gst_message_unref);
 declare_autoptr(GString, gchar, g_free);
+} // namespace
 
-auto run() -> bool {
+auto main(int argc, char* argv[]) -> int {
+    gst_init(&argc, &argv);
+
     const auto pipeline = AutoGstObject(gst_pipeline_new(NULL));
-    assert_b(pipeline.get() != NULL);
+    ensure(pipeline.get() != NULL);
 
     // videotestsrc -> videoconvert -> waylandsink
 
-    unwrap_pb_mut(videotestsrc, add_new_element_to_pipeine(pipeline.get(), "videotestsrc"));
-    unwrap_pb_mut(videoconvert, add_new_element_to_pipeine(pipeline.get(), "videoconvert"));
-    unwrap_pb_mut(waylandsink, add_new_element_to_pipeine(pipeline.get(), "waylandsink"));
+    unwrap_mut(videotestsrc, add_new_element_to_pipeine(pipeline.get(), "videotestsrc"));
+    unwrap_mut(videoconvert, add_new_element_to_pipeine(pipeline.get(), "videoconvert"));
+    unwrap_mut(waylandsink, add_new_element_to_pipeine(pipeline.get(), "waylandsink"));
 
     g_object_set(&waylandsink,
                  "async", FALSE,
@@ -28,14 +30,10 @@ auto run() -> bool {
                  "is-live", TRUE,
                  NULL);
 
-    assert_b(gst_element_link_pads(&videotestsrc, NULL, &videoconvert, NULL) == TRUE);
-    assert_b(gst_element_link_pads(&videoconvert, NULL, &waylandsink, NULL) == TRUE);
+    ensure(gst_element_link_pads(&videotestsrc, NULL, &videoconvert, NULL) == TRUE);
+    ensure(gst_element_link_pads(&videoconvert, NULL, &waylandsink, NULL) == TRUE);
 
-    return run_pipeline(pipeline.get());
-}
-} // namespace
+    ensure(run_pipeline(pipeline.get()));
 
-auto main(int argc, char* argv[]) -> int {
-    gst_init(&argc, &argv);
-    return run() ? 1 : 0;
+    return 0;
 }

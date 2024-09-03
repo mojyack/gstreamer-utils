@@ -3,7 +3,17 @@ add_global_arguments('-Wfatal-errors', language: 'cpp')
 
 gstreamer_dep = dependency('gstreamer-1.0', version : ['>=1.20'])
 
-executable('example', 
-        files('src/example.cpp', 'src/pipeline-helper.cpp'),
+executable('simple',
+        files('examples/simple.cpp', 'src/pipeline-helper.cpp'),
+        dependencies: [gstreamer_dep]
+)
+
+executable('appsrcsink',
+        files('examples/appsrcsink.cpp', 'src/pipeline-helper.cpp'),
+        dependencies: [gstreamer_dep, dependency('gstreamer-app-1.0')]
+)
+
+executable('dynamic-pipeline-switch',
+        files('examples/dynamic-pipeline-switch.cpp', 'src/pipeline-helper.cpp'),
         dependencies: [gstreamer_dep]
 ) 

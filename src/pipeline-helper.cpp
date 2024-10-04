@@ -27,10 +27,8 @@ auto run_pipeline(GstElement* pipeline) -> bool {
         auto err = (GError*)(NULL);
         auto str = (gchar*)(NULL);
         gst_message_parse_error(msg.get(), &err, &str);
-        g_printerr("Error received from element %s: %s\n",
-                   GST_OBJECT_NAME(msg->src), err->message);
-        g_printerr("Debugging information: %s\n",
-                   str ? str : "none");
+        g_printerr("Error received from element %s: %s\n", GST_OBJECT_NAME(msg->src), err->message);
+        g_printerr("Debugging information: %s\n", str ? str : "none");
         g_clear_error(&err);
         g_free(str);
     } break;
@@ -42,6 +40,7 @@ auto run_pipeline(GstElement* pipeline) -> bool {
         break;
     }
 
+    ensure(gst_element_set_state(pipeline, GST_STATE_NULL) == GST_STATE_CHANGE_SUCCESS);
     return true;
 }
 

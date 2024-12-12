@@ -8,7 +8,6 @@
 #include "gstutil/pipeline-helper.hpp"
 #include "macros/autoptr.hpp"
 #include "macros/unwrap.hpp"
-#include "util/assert.hpp"
 
 namespace {
 declare_autoptr(GMainLoop, GMainLoop, g_main_loop_unref);
@@ -60,13 +59,13 @@ auto switch_wayland_to_fake(Context& self) -> bool {
 }
 auto pad_block_callback(GstPad* const /*pad*/, GstPadProbeInfo* const /*info*/, gpointer const data) -> GstPadProbeReturn {
     auto& self = *std::bit_cast<Context*>(data);
-    line_print("blocked");
+    PRINT("blocked");
     if(self.fakesink != nullptr) {
         switch_fake_to_wayland(self);
     } else {
         switch_wayland_to_fake(self);
     }
-    line_print("unblocking");
+    PRINT("unblocking");
     return GST_PAD_PROBE_REMOVE;
 }
 
@@ -100,7 +99,7 @@ auto run_dynamic_switch_example() -> bool {
         ensure_v(src_pad.get() != NULL);
         while(true) {
             std::this_thread::sleep_for(std::chrono::seconds(1));
-            line_print("switch");
+            PRINT("switch");
             gst_pad_add_probe(src_pad.get(), GST_PAD_PROBE_TYPE_BLOCK_DOWNSTREAM, pad_block_callback, &context, NULL);
         }
         return true;

@@ -17,3 +17,8 @@ executable('dynamic-pipeline-switch',
         files('examples/dynamic-pipeline-switch.cpp', 'src/pipeline-helper.cpp'),
         dependencies: [gstreamer_dep]
 ) 
+
+executable('seek',
+        files('examples/seek.cpp', 'src/pipeline-helper.cpp'),
+        dependencies: [gstreamer_dep]
+) 

@@ -1,4 +1,6 @@
+#include <iostream>
 #include <span>
+#include <utility>
 
 #include <gst/gst.h>
 
@@ -15,7 +17,7 @@ declare_autoptr(GString, gchar, g_free);
 
 auto link_pads_simple(GstElement* const /*element*/, GstPad* const src_pad, GstElement* sink) -> void {
     const auto name = AutoGString(gst_pad_get_name(src_pad));
-    PRINT("pad added ", name.get());
+    PRINT("pad added {}", name.get());
     if(!std::string_view(name.get()).starts_with("video_")) {
         return;
     }
@@ -102,7 +104,7 @@ auto process_command(Player& player, const std::span<const std::string_view> arg
         ensure(player.pause());
     } else if(command == "pos") {
         unwrap(pos, player.query_pos());
-        print(pos, "s");
+        std::println("{}s", pos);
     } else {
         bail("unknown command");
     }
@@ -113,7 +115,7 @@ auto cli(GstElement* pipeline) -> bool {
     auto player = Player{pipeline};
     auto line   = std::string();
 loop:
-    std::cout << "> ";
+    std::print("> ");
     std::flush(std::cout);
     if(!std::getline(std::cin, line)) {
         return true;
@@ -126,7 +128,7 @@ loop:
         return true;
     }
     if(process_command(player, args)) {
-        print("done");
+        std::println("done");
     }
     goto loop;
 }
@@ -156,7 +158,7 @@ auto main(const int argc, const char* const* argv) -> int {
     ensure(gst_element_link_pads(&avdec_h264, NULL, &videoconvert, NULL) == TRUE);
     ensure(gst_element_link_pads(&videoconvert, NULL, &waylandsink, NULL) == TRUE);
 
-    print("state: ", gst_element_set_state(pipeline.get(), GST_STATE_PLAYING));
+    std::println("state: {}", std::to_underlying(gst_element_set_state(pipeline.get(), GST_STATE_PLAYING)));
 
     cli(pipeline.get());
 

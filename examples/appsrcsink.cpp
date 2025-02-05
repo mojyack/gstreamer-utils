@@ -27,7 +27,7 @@ auto on_new_sample(GstAppSink* const appsink, const gpointer /*data*/) -> GstFlo
         static auto first = true;
         if(first) {
             auto caps = AutoGstCaps(gst_sample_get_caps(sample.get()));
-            print("stream format: ", gst_caps_serialize(caps.get(), GST_SERIALIZE_FLAG_NONE));
+            PRINT("stream format: {}", gst_caps_serialize(caps.get(), GST_SERIALIZE_FLAG_NONE));
             first = false;
         }
         auto buffer = gst_sample_get_buffer(sample.get());
@@ -37,7 +37,7 @@ auto on_new_sample(GstAppSink* const appsink, const gpointer /*data*/) -> GstFlo
         memcpy(payload.data(), info.data, info.size);
         gst_buffer_unmap(buffer, &info);
     }
-    print("pulled ", payload.size(), " bytes");
+    PRINT("pulled {} bytes", payload.size());
     // push
     {
         auto buffer = AutoGstBuffer(gst_buffer_new_allocate(NULL, payload.size(), NULL));

@@ -13,7 +13,7 @@ auto add_new_element_to_pipeine(GstElement* const pipeline, const char* const el
     return elm;
 }
 
-auto run_pipeline(GstElement* pipeline) -> bool {
+auto run_pipeline(GstElement* const pipeline) -> bool {
     ensure(gst_element_set_state(pipeline, GST_STATE_PLAYING) == GST_STATE_CHANGE_SUCCESS);
 
     const auto bus = AutoGstObject(gst_element_get_bus(pipeline));
@@ -44,3 +44,8 @@ auto run_pipeline(GstElement* pipeline) -> bool {
     return true;
 }
 
+auto post_eos(GstElement* const pipeline) -> bool {
+    const auto bus = AutoGstObject(gst_element_get_bus(pipeline));
+    ensure(gst_bus_post(bus.get(), gst_message_new_eos(NULL)) == TRUE);
+    return true;
+}

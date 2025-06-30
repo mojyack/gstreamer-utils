@@ -43,3 +43,13 @@ executable('seek',
     gstreamer_dep,
   ],
 )
+
+executable('change-resolution',
+  files(
+    'examples/change-resolution.cpp',
+    'src/pipeline-helper.cpp',
+  ),
+  dependencies : [
+    gstreamer_dep,
+  ],
+)

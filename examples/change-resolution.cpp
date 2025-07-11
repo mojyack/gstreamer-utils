@@ -4,6 +4,7 @@
 #include <gst/gst.h>
 
 #include "gstutil/auto-gst-object.hpp"
+#include "gstutil/caps.hpp"
 #include "gstutil/pipeline-helper.hpp"
 #include "macros/autoptr.hpp"
 #include "macros/unwrap.hpp"
@@ -50,14 +51,10 @@ auto reconfigure_pipeline(Context& self) -> bool {
     self.capsfilter2 = &capsfilter2;
 
     // link
-    const auto videotestsrc_caps = AutoGstCaps(gst_caps_from_string("video/x-raw,format=RGBA,width=1280,height=720,framerate=30/1"));
-    ensure(videotestsrc_caps.get() != NULL);
     const auto videorate_caps = AutoGstCaps(gst_caps_from_string(std::format("video/x-raw,framerate={}/1", self.framerate).data()));
     ensure(videorate_caps.get() != NULL);
-    const auto videoscale_caps = AutoGstCaps(gst_caps_from_string(std::format("video/x-raw,width={},height={}", self.width, self.height).data()));
-    ensure(videoscale_caps.get() != NULL);
-    g_object_set(&capsfilter1, "caps", videotestsrc_caps.get(), NULL);
-    g_object_set(&capsfilter2, "caps", videoscale_caps.get(), NULL);
+    ensure(set_caps(&capsfilter1, "video/x-raw,format=RGBA,width=1280,height=720,framerate=30/1"));
+    ensure(set_caps(&capsfilter2, std::format("video/x-raw,width={},height={}", self.width, self.height).data()));
     PRINT("link");
     ensure(gst_element_link_pads(self.videotestsrc, NULL, self.capsfilter1, NULL) == TRUE);
     ensure(gst_element_link_pads(self.capsfilter1, NULL, self.videorate, NULL) == TRUE);

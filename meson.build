@@ -47,6 +47,7 @@ executable('seek',
 executable('change-resolution',
   files(
     'examples/change-resolution.cpp',
+    'src/caps.cpp',
     'src/pipeline-helper.cpp',
   ),
   dependencies : [

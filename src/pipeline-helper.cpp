@@ -6,7 +6,7 @@
 
 declare_autoptr(GstMessage, GstMessage, gst_message_unref);
 
-auto add_new_element_to_pipeine(GstElement* const pipeline, const char* const element_name) -> GstElement* {
+auto add_new_element_to_pipeline(GstElement* const pipeline, const char* const element_name) -> GstElement* {
     auto elm = gst_element_factory_make(element_name, NULL);
     ensure(elm != NULL);
     ensure(gst_bin_add(GST_BIN(pipeline), elm) == TRUE);

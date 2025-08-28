@@ -41,10 +41,10 @@ auto reconfigure_pipeline(Context& self) -> bool {
         ensure(gst_bin_remove(GST_BIN(self.pipeline), elem) == TRUE);
     }
     // create new elements
-    unwrap_mut(capsfilter1, add_new_element_to_pipeine(self.pipeline, "capsfilter"));
-    unwrap_mut(videorate, add_new_element_to_pipeine(self.pipeline, "videorate"));
-    unwrap_mut(videoscale, add_new_element_to_pipeine(self.pipeline, "videoscale"));
-    unwrap_mut(capsfilter2, add_new_element_to_pipeine(self.pipeline, "capsfilter"));
+    unwrap_mut(capsfilter1, add_new_element_to_pipeline(self.pipeline, "capsfilter"));
+    unwrap_mut(videorate, add_new_element_to_pipeline(self.pipeline, "videorate"));
+    unwrap_mut(videoscale, add_new_element_to_pipeline(self.pipeline, "videoscale"));
+    unwrap_mut(capsfilter2, add_new_element_to_pipeline(self.pipeline, "capsfilter"));
     self.capsfilter1 = &capsfilter1;
     self.videorate   = &videorate;
     self.videoscale  = &videoscale;
@@ -81,9 +81,9 @@ auto run_change_resolution_example() -> bool {
     const auto pipeline = AutoGstObject(gst_pipeline_new(NULL));
     ensure(pipeline.get() != NULL);
 
-    unwrap_mut(videotestsrc, add_new_element_to_pipeine(pipeline.get(), "videotestsrc"));
+    unwrap_mut(videotestsrc, add_new_element_to_pipeline(pipeline.get(), "videotestsrc"));
     g_object_set(&videotestsrc, "is-live", TRUE, "pattern", 11, "horizontal-speed", 2, NULL);
-    unwrap_mut(waylandsink, add_new_element_to_pipeine(pipeline.get(), "waylandsink"));
+    unwrap_mut(waylandsink, add_new_element_to_pipeline(pipeline.get(), "waylandsink"));
     g_object_set(&waylandsink, "async", FALSE, NULL);
 
     auto context = Context{

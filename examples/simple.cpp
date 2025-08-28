@@ -19,9 +19,9 @@ auto main(int argc, char* argv[]) -> int {
 
     // videotestsrc -> videoconvert -> waylandsink
 
-    unwrap_mut(videotestsrc, add_new_element_to_pipeine(pipeline.get(), "videotestsrc"));
-    unwrap_mut(videoconvert, add_new_element_to_pipeine(pipeline.get(), "videoconvert"));
-    unwrap_mut(waylandsink, add_new_element_to_pipeine(pipeline.get(), "waylandsink"));
+    unwrap_mut(videotestsrc, add_new_element_to_pipeline(pipeline.get(), "videotestsrc"));
+    unwrap_mut(videoconvert, add_new_element_to_pipeline(pipeline.get(), "videoconvert"));
+    unwrap_mut(waylandsink, add_new_element_to_pipeline(pipeline.get(), "waylandsink"));
 
     g_object_set(&waylandsink,
                  "async", FALSE,

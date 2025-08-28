@@ -31,8 +31,8 @@ auto switch_fake_to_wayland(Context& self) -> bool {
     ensure(gst_bin_remove(GST_BIN(self.pipeline), self.fakesink) == TRUE);
     self.fakesink = nullptr;
     // create new elements
-    unwrap_mut(videoconvert, add_new_element_to_pipeine(self.pipeline, "videoconvert"));
-    unwrap_mut(waylandsink, add_new_element_to_pipeine(self.pipeline, "waylandsink"));
+    unwrap_mut(videoconvert, add_new_element_to_pipeline(self.pipeline, "videoconvert"));
+    unwrap_mut(waylandsink, add_new_element_to_pipeline(self.pipeline, "waylandsink"));
     self.videoconvert = &videoconvert;
     self.waylandsink  = &waylandsink;
     ensure(gst_element_link_pads(self.videotestsrc, NULL, &videoconvert, NULL) == TRUE);
@@ -51,7 +51,7 @@ auto switch_wayland_to_fake(Context& self) -> bool {
     ensure(gst_bin_remove(GST_BIN(self.pipeline), self.waylandsink) == TRUE);
     self.waylandsink = nullptr;
     // create new elements
-    unwrap_mut(fakesink, add_new_element_to_pipeine(self.pipeline, "fakesink"));
+    unwrap_mut(fakesink, add_new_element_to_pipeline(self.pipeline, "fakesink"));
     self.fakesink = &fakesink;
     ensure(gst_element_link_pads(self.videotestsrc, NULL, &fakesink, NULL) == TRUE);
     ensure(gst_element_sync_state_with_parent(&fakesink) == TRUE);
@@ -73,8 +73,8 @@ auto run_dynamic_switch_example() -> bool {
     const auto pipeline = AutoGstObject(gst_pipeline_new(NULL));
     ensure(pipeline.get() != NULL);
 
-    unwrap_mut(videotestsrc, add_new_element_to_pipeine(pipeline.get(), "videotestsrc"));
-    unwrap_mut(fakesink, add_new_element_to_pipeine(pipeline.get(), "fakesink"));
+    unwrap_mut(videotestsrc, add_new_element_to_pipeline(pipeline.get(), "videotestsrc"));
+    unwrap_mut(fakesink, add_new_element_to_pipeline(pipeline.get(), "fakesink"));
 
     g_object_set(&videotestsrc,
                  "is-live", TRUE,

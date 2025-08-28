@@ -61,11 +61,11 @@ auto main(int argc, char* argv[]) -> int {
     ensure(pipeline.get() != NULL);
 
     // sender
-    unwrap_mut(videotestsrc, add_new_element_to_pipeine(pipeline.get(), "videotestsrc"));
+    unwrap_mut(videotestsrc, add_new_element_to_pipeline(pipeline.get(), "videotestsrc"));
     g_object_set(&videotestsrc, "is-live", TRUE, NULL);
-    unwrap_mut(x264enc, add_new_element_to_pipeine(pipeline.get(), "x264enc"));
-    unwrap_mut(rtph264pay, add_new_element_to_pipeine(pipeline.get(), "rtph264pay"));
-    unwrap_mut(appsink, add_new_element_to_pipeine(pipeline.get(), "appsink"));
+    unwrap_mut(x264enc, add_new_element_to_pipeline(pipeline.get(), "x264enc"));
+    unwrap_mut(rtph264pay, add_new_element_to_pipeline(pipeline.get(), "rtph264pay"));
+    unwrap_mut(appsink, add_new_element_to_pipeline(pipeline.get(), "appsink"));
     g_object_set(&appsink, "emit-signals", TRUE, NULL);
     ensure(g_signal_connect(&appsink, "new-sample", G_CALLBACK(on_new_sample), NULL) > 0);
     g_object_set(&appsink, "async", FALSE, NULL);
@@ -78,12 +78,12 @@ auto main(int argc, char* argv[]) -> int {
     auto payload_caps = AutoGstCaps(gst_caps_from_string(caps_str));
     ensure(payload_caps.get() != NULL);
 
-    unwrap_mut(appsrc, add_new_element_to_pipeine(pipeline.get(), "appsrc"));
+    unwrap_mut(appsrc, add_new_element_to_pipeline(pipeline.get(), "appsrc"));
     g_object_set(&appsrc, "format", GST_FORMAT_TIME, NULL);
-    unwrap_mut(rtph264depay, add_new_element_to_pipeine(pipeline.get(), "rtph264depay"));
-    unwrap_mut(avdec_h264, add_new_element_to_pipeine(pipeline.get(), "avdec_h264"));
-    unwrap_mut(videoconvert, add_new_element_to_pipeine(pipeline.get(), "videoconvert"));
-    unwrap_mut(waylandsink, add_new_element_to_pipeine(pipeline.get(), "waylandsink"));
+    unwrap_mut(rtph264depay, add_new_element_to_pipeline(pipeline.get(), "rtph264depay"));
+    unwrap_mut(avdec_h264, add_new_element_to_pipeline(pipeline.get(), "avdec_h264"));
+    unwrap_mut(videoconvert, add_new_element_to_pipeline(pipeline.get(), "videoconvert"));
+    unwrap_mut(waylandsink, add_new_element_to_pipeline(pipeline.get(), "waylandsink"));
     g_object_set(&waylandsink, "async", FALSE, NULL);
     g_object_set(&waylandsink, "sync", FALSE, NULL);
     ensure(gst_element_link_pads_filtered(&appsrc, NULL, &rtph264depay, NULL, payload_caps.get()) == TRUE);

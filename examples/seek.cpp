@@ -146,12 +146,12 @@ auto main(const int argc, const char* const* argv) -> int {
     ensure(pipeline);
 
     // filesrc -> qtdemux -> h264parse -> avdec_h264 -> videoconvert ! waylandsink
-    unwrap_mut(filesrc, add_new_element_to_pipeine(pipeline.get(), "filesrc"));
+    unwrap_mut(filesrc, add_new_element_to_pipeline(pipeline.get(), "filesrc"));
     g_object_set(&filesrc, "location", video_file, NULL);
-    unwrap_mut(qtdemux, add_new_element_to_pipeine(pipeline.get(), "qtdemux"));
-    unwrap_mut(avdec_h264, add_new_element_to_pipeine(pipeline.get(), "avdec_h264"));
-    unwrap_mut(videoconvert, add_new_element_to_pipeine(pipeline.get(), "videoconvert"));
-    unwrap_mut(waylandsink, add_new_element_to_pipeine(pipeline.get(), "waylandsink"));
+    unwrap_mut(qtdemux, add_new_element_to_pipeline(pipeline.get(), "qtdemux"));
+    unwrap_mut(avdec_h264, add_new_element_to_pipeline(pipeline.get(), "avdec_h264"));
+    unwrap_mut(videoconvert, add_new_element_to_pipeline(pipeline.get(), "videoconvert"));
+    unwrap_mut(waylandsink, add_new_element_to_pipeline(pipeline.get(), "waylandsink"));
 
     ensure(gst_element_link_pads(&filesrc, NULL, &qtdemux, NULL) == TRUE);
     g_signal_connect(&qtdemux, "pad-added", G_CALLBACK(link_pads_simple), &avdec_h264);

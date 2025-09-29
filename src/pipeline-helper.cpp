@@ -1,6 +1,7 @@
 #include <gst/gst.h>
 
 #include "auto-gst-object.hpp"
+#include "error.hpp"
 #include "macros/assert.hpp"
 #include "macros/autoptr.hpp"
 
@@ -24,13 +25,9 @@ auto run_pipeline(GstElement* const pipeline) -> bool {
     ensure(msg.get() != NULL);
     switch(GST_MESSAGE_TYPE(msg.get())) {
     case GST_MESSAGE_ERROR: {
-        auto err = (GError*)(NULL);
-        auto str = (gchar*)(NULL);
-        gst_message_parse_error(msg.get(), &err, &str);
+        auto [err, str] = parse_message_to_error(msg.get());
         g_printerr("Error received from element %s: %s\n", GST_OBJECT_NAME(msg->src), err->message);
-        g_printerr("Debugging information: %s\n", str ? str : "none");
-        g_clear_error(&err);
-        g_free(str);
+        g_printerr("Debugging information: %s\n", str ? str.get() : "none");
     } break;
     case GST_MESSAGE_EOS:
         g_print("End-Of-Stream reached.\n");
